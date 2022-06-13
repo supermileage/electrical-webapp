@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UBCST Data Exporter - Raw Query</title>
+  <meta name="description" content="Export UBCST telemetry data as CSV using SQL queries">
+  <meta name="author" content="UBC Supermileage Elec - Roy">
+
+  <meta property="og:title" content="UBCST Data Exporter - Raw Query">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://data.electrical.supermileage.ca/static/query">
+  <meta property="og:description" content="Export UBCST telemetry data as CSV using SQL queries">
+  <!-- <meta property="og:image" content="image.png"> -->
+
+  <!-- <link rel="icon" href="/favicon.ico">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="query-div">
+    <form class="query-form">
+      <label for="query">SQL Query</label>
+      <textarea id="query" name="query" class="query-entry"></textarea>
+      <input id="querySubmit" type="button" value="submit">
+    </form>
+  </div>
+
+  <script src="/js/query.js"></script>
+</body>
+</html>

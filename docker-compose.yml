@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+
+  flask:
+    build: ./flaskapp
+    container_name: ubcst-electrical-webapp
+    restart: always
+    volumes:
+      - ./flaskapp:/app
+    expose:
+      - 5000
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./flaskapp:/app
+      - ./nginx/conf:/etc/nginx/conf.d
+    ports:
+      - "80:80"
