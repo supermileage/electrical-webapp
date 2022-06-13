@@ -2,10 +2,12 @@ import requests
 import io
 import csv
 from flask import make_response
+from dotenv import load_dotenv
+import os
+from app import app
 
-bq_url = 
-api_key = 
-
+bq_url = os.getenv("BIGQUERY_URL")
+api_key = os.getenv("GOOGLE_API_KEY")
 
 def bigquery(query):
    json = {
@@ -26,6 +28,8 @@ def make_csv_response(csv):
     return res
 
 def format_csv(data):
+    if len(data) == 0:
+        return None
     columns = list(data[0].keys())
     res_map = []
     # format data for csv writer
