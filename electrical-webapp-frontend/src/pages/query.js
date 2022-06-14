@@ -29,11 +29,9 @@ const gridStyle = {
 // data
 // markup
 const QueryPage = ({location}) => {
-  const [query, setQuery] = useState('');
-
   const handleSubmit = () => {
     var formdata = JSON.stringify({'query': query});
-
+    
     $.ajax({
       type: "POST",
       url: "/api/query",
@@ -68,6 +66,7 @@ const QueryPage = ({location}) => {
 
   const params = new URLSearchParams(location.search);
   var filledQuery = params.has("query") ? params.get("query") : ""
+  const [query, setQuery] = useState(filledQuery);
 
   return (
     <main style={pageStyle}>
