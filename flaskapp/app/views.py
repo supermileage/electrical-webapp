@@ -1,3 +1,4 @@
+from enum import unique
 from flask import Flask, request, jsonify, make_response
 import json
 import requests
@@ -29,3 +30,9 @@ def query():
       return 'No data matching query', 400
    return make_csv_response(csv)
 
+@app.route('/api/columns', methods = ['POST', 'GET'])
+def get_columns():
+   return jsonify({ 
+      'vehicles': get_unique('vehicle'),
+      'events': get_unique('event')
+   })

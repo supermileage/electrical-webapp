@@ -5,7 +5,8 @@ module.exports = {
   },
   plugins: [`gatsby-theme-material-ui`],
   proxy: {
-      prefix: "/api",
-      url: "http://140.238.154.56"
-    }
+    prefix: "/api",
+    // url: "http://140.238.154.56"
+    url: "http://localhost"
+  }
 }

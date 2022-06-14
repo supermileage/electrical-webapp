@@ -12,13 +12,6 @@ const pageStyle = {
   fontFamily: '"Roboto Slab", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
 };
 
-const textBoxStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100vh"
-};
-
 const gridStyle = {
   m: 1,
   height: "100vh"
@@ -46,7 +39,7 @@ const errorPage = () => {
       style = {gridStyle}
     >
       <Grid item xs={4} sm={6} md={6} style={{textAlign: 'center'}}>
-          <img src={ubcst_logo} style={imgStyle}></img>
+          <img src={ubcst_logo} style={imgStyle} alt="Supermileage logo"></img>
           <h1>404</h1>
           <h2>OOPS! We couldn't find that page!</h2>
       </Grid>

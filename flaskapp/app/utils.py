@@ -2,9 +2,9 @@ import requests
 import io
 import csv
 from flask import make_response
-from dotenv import load_dotenv
 import os
 from app import app
+import logging
 
 bq_url = os.getenv("BIGQUERY_URL")
 api_key = os.getenv("GOOGLE_API_KEY")
@@ -46,3 +46,9 @@ def format_csv(data):
     csv_writer.writerows(res_map)
     return csv_string_io.getvalue()
 
+def get_unique(column):
+    query = "SELECT DISTINCT {} FROM `ubc-smc-telemetry.telemetry_dataset.telemetry_table`".format(column)
+    values_dict = bigquery(query).json()
+    app.logger.info(type(values_dict))
+    return list(map(lambda value : value[column], values_dict))
+    
