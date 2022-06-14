@@ -34,7 +34,7 @@ This repo contains the source code for the interactive electrical webapp. Curren
     ```
 4. Start docker containers
     ```shell
-    cd .. <br>
+    cd ..
     docker-compose up
     ```
 
