@@ -18,7 +18,7 @@ services:
     container_name: nginx
     restart: always
     volumes:
-      - ./flaskapp:/app
+      - ./electrical-webapp-frontend/public:/app
       - ./nginx/conf:/etc/nginx/conf.d
     ports:
       - "80:80"
