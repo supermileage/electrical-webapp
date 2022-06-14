@@ -92,7 +92,7 @@ const QueryPage = ({location}) => {
               multiline={true}
               minRows={5}
               onChange={event => setQuery(event.target.value)}
-              value = {filledQuery}
+              defaultValue = {filledQuery}
             />
             <Button id = "query-submit" variant="contained" onClick={handleSubmit}>Submit</Button>
           </FormControl>
