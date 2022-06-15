@@ -1,22 +1,17 @@
 import * as React from "react"
 import {
-  Button,
-  FormControl,
   Card,
   Grid,
   TextField,
   FormControlLabel,
   Checkbox,
   FormGroup,
-  Container,
   FormLabel,
   Autocomplete,
-  listItemTextClasses,
-  Box
 } from "@mui/material"
+import {LoadingButton} from "@mui/lab"
 import {useState, useEffect, componentDidUpdate} from 'react'
 import $, { event } from 'jquery'
-import moment from 'moment'
 
 
 // styles
@@ -52,33 +47,67 @@ const gridStyle = {
 const QueryPage = ({location}) => {
   const [queryVehicles, setQueryVehicles] = useState([]);
   const [queryEvents, setQueryEvents] = useState([]);
-  const [queryFromDate, setQueryFromDate] = useState("2000-01-01T00:00");
-  const [queryToDate, setQueryToDate] = useState("3000-01-01T00:00");
-  const [queryLimit, setQueryLimit] = useState(-1)
+  const [queryFromDate, setQueryFromDate] = useState("");
+  const [queryToDate, setQueryToDate] = useState("");
+  const [queryLimit, setQueryLimit] = useState(-1);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
-    let startQuery = "SELECT vehicle, event, data, recorded_at as timestamp FROM `ubc-smc-telemetry.telemetry_dataset.telemetry_table` WHERE ";
+    setLoading("true");
+    // SQL Query Builder
+    let startQuery = "SELECT vehicle, event, data, recorded_at as timestamp FROM `ubc-smc-telemetry.telemetry_dataset.telemetry_table` ";
     let vehicleQuery = "( " + queryVehicles.map(vehicle => "vehicle = '" + vehicle + "'").join(" OR ") + " )";
     let eventQuery = "( " + queryEvents.map(event => "event = '" + event + "'").join(" OR ") + " )";
-    let timestampQuery = "( " + "TIMESTAMP(recorded_at) <= '" + queryToDate + ":59' AND TIMESTAMP(recorded_at) >= '" + queryFromDate + ":00'" + " ) ";
+    
+    let fromTimestamp = queryFromDate === "" ? "" : "TIMESTAMP(recorded_at) >= '" + queryFromDate + ":00'";
+    let toTimestamp = queryToDate === "" ? "" : "TIMESTAMP(recorded_at) <= '" + queryToDate + ":59'";
+    let timestampQuery = "";
+    if (fromTimestamp !== "" && toTimestamp !== "") {
+      timestampQuery = "( " + fromTimestamp + " AND " + toTimestamp + " )";
+    } else if (fromTimestamp !== "") {
+      timestampQuery = fromTimestamp;
+    } else if (toTimestamp !== "") {
+      timestampQuery = toTimestamp;
+    }
     let endQuery = "ORDER BY TIMESTAMP(recorded_at) DESC";
 
     // let query = startQuery + vehicleQuery + " AND " + eventQuery + " AND " + timestampQuery + " " + endQuery;
     let query = startQuery;
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // WHERE BLOCK
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    if (vehicleQuery !== "(  )" || eventQuery != "(  )" || timestampQuery !== "") {
+      query += " WHERE ";
+    }
     if (vehicleQuery !== "(  )") {
-      query += vehicleQuery + " AND ";
+      query += vehicleQuery;
     }
+    if (eventQuery != "(  )" || timestampQuery !== ""){
+      query += " AND ";
+    } 
     if (eventQuery != "(  )") {
-      query += eventQuery + " AND ";
+      query += eventQuery;
     }
-    query += timestampQuery + endQuery
+    if (timestampQuery !== ""){
+      query += " AND ";
+    }
+    query += timestampQuery
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // END WHERE BLOCK
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    query += endQuery
     if (queryLimit > 0){
       query += " LIMIT " + queryLimit;
+    } else {
+      query += " LIMIT " + 10000;
     }
     console.log(query);
 
     var formdata = JSON.stringify({'query': query});
 
+    // Send query request to flaskapp
     $.ajax({
       type: "POST",
       url: "/api/query",
@@ -103,10 +132,12 @@ const QueryPage = ({location}) => {
               $("body").append(a);
               a[0].click();
               $("body").remove(a);
+              setLoading(false);
           }
       },
       error: (res, status, err) => {
           alert("Error: " + res.responseText);
+          setLoading(false);
       }
     })
   }
@@ -213,7 +244,7 @@ const QueryPage = ({location}) => {
             onChange={event => setQueryLimit(parseInt(event.target.value))}
             sx={{m: 1}}
             />
-            <Button id="query-submit" variant="contained" onClick={handleSubmit}>Submit</Button>
+            <LoadingButton id="query-submit" variant="contained" loading={loading} onClick={handleSubmit}>Submit</LoadingButton>
             </FormGroup>
           </form>
         </Card>
